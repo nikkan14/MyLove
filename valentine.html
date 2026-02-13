@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* Continuous floating hearts */
+/* Continuous floating hearts from bottom to top */
+.floating-heart {
+    position: absolute;
+    bottom: 0; /* start at bottom */
+    font-size: 16px;
+    opacity: 0.7;
+    pointer-events: none;
+    animation: floatHeartUp linear infinite;
+}
+
+@keyframes floatHeartUp {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: "Poppins", system-ui, sans-serif;
+        overflow: hidden;
+        position: relative;
+        background: linear-gradient(160deg, #ffd1dc, #ff9eb5, #ff758c);
+        background-size: 600% 600%;
+        animation: gradientShift 30s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* ===== Floating Images ===== */
+    .photo {
+        position: absolute;
+        width: 180px;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 14px;
+        box-shadow: 0 12px 28px rgba(0,0,0,0.25), 0 4px 10px rgba(0,0,0,0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 0.95;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    .photo:hover {
+        transform: scale(1.08) rotate(0deg);
+        z-index: 5;
+        box-shadow: 0 20px 35px rgba(0,0,0,0.35);
+    }
+
+    /* ===== Main Container ===== */
+    .container {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        width: 90%;
+        max-width: 420px;
+        height: 340px;
+        padding: 35px 25px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 24px;
+        box-shadow: 0 12px 30px rgba(255,77,109,0.3), 0 4px 12px rgba(255,77,109,0.2);
+        overflow: hidden;
+        z-index: 3;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+        box-shadow: 0 18px 40px rgba(255,77,109,0.5), 0 6px 18px rgba(255,77,109,0.3);
+    }
+
+    h1 { margin: 0; color: #ff4d6d; letter-spacing: -0.5px; }
+    .subtitle { margin-top: 8px; font-size: 15px; color: #555; line-height: 1.6; }
+    .question { margin-top: 25px; font-size: 26px; font-weight: 600; }
+
+    button {
+        position: absolute;
+        padding: 12px 28px;
+        font-size: 17px;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.15s ease, box-shadow 0.3s ease;
+    }
+
+    #yesBtn {
+        background: #ff4d6d;
+        color: white;
+        left: 45px;
+        bottom: 30px;
+        box-shadow: 0 8px 18px rgba(255,77,109,0.4);
+        animation: pulse 2.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.06); }
+        100% { transform: scale(1); }
+    }
+
+    #yesBtn:hover {
+        box-shadow: 0 15px 35px rgba(255,77,109,0.6);
+        transform: scale(1.08);
+    }
+
+    #noBtn { background: #e0e0e0; color: #333; left: 230px; bottom: 30px; }
+
+    .tease {
+        position: absolute;
+        bottom: 85px;
+        width: 100%;
+        font-size: 14px;
+        color: #ff4d6d;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .music-btn {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        padding: 10px 12px;
+        cursor: pointer;
+        font-size: 16px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        z-index: 10;
+    }
+
+    /* ===== Popup Overlay ===== */
+    .popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+        z-index: 20;
+    }
+
+    .popup-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .popup-overlay img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        transform: scale(0.8);
+        transition: transform 0.4s ease;
+    }
+
+    .popup-overlay.show img { transform: scale(1); }
+
+    /* ===== Floating Hearts Confetti ===== */
+    .heart {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: red;
+        clip-path: polygon(50% 0%, 61% 12%, 75% 12%, 84% 25%, 84% 38%, 75% 50%, 50% 75%, 25% 50%, 16% 38%, 16% 25%, 25% 12%, 39% 12%);
+        opacity: 0.7;
+        pointer-events: none;
+        animation: floatHeart linear infinite;
+    }
+
+    @keyframes floatHeart {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+        100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ===== Love Notes ===== */
+    .love-note {
+        position: absolute;
+        font-size: 18px;
+        color: #ff4d6d;
+        opacity: 0;
+        pointer-events: none;
+        animation: loveNoteAnim 3s forwards;
+    }
+
+    @keyframes loveNoteAnim {
+        0% { transform: translateY(0) scale(0.8); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translateY(-60px) scale(1.1); opacity: 0; }
+    }
+
+    @media (max-width: 600px) { .photo { width: 120px; height: 160px; } }
+</style>
+</head>
+<body>
+
+<button class="music-btn" onclick="toggleMusic()">🔊</button>
+
+<audio id="music" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/10/26/audio_5c1a40a92f.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 10 Photos -->
+<img class="photo" src="./Images/Image1.jpg">
+<img class="photo" src="./Images/Image2.jpeg">
+<img class="photo" src="./Images/Image3.jpeg">
+<img class="photo" src="./Images/Image4.jpeg">
+<img class="photo" src="./Images/Image5.jpg">
+<img class="photo" src="./Images/Image6.jpg">
+<img class="photo" src="./Images/Imgae7.jpg">
+<img class="photo" src="./Images/Image8.jpg">
+<img class="photo" src="./Images/Image9.jpg">
+<img class="photo" src="./Images/Image10.jpeg">
+<img class="photo" src="./Images/Image11.jpg">
+
+<div class="container">
+    <h1>Hey Maush Maush ❤️</h1>
+    <div class="subtitle">For some time now, my heart has carried a single question…</div>
+    <div class="question">Will you be my Valentine? 💖</div>
+    <div class="tease" id="teaseText">Nice try 😏</div>
+    <button id="yesBtn" onclick="yesClicked()" href="letter.html">Yes 💕</button>
+    <button id="noBtn">No 😜</button>
+</div>
+
+<!-- Popup overlay -->
+<div class="popup-overlay" id="popupOverlay">
+    <img id="popupImage" src="">
+</div>
+
+<script>
+    /* ===== Random Photo Placement (no overlapping) ===== */
+    const photos = document.querySelectorAll(".photo");
+    
+    function placePhotos() {
+        const containerRect = container.getBoundingClientRect();
+        const positions = [];
+        photos.forEach(photo => {
+            let x, y, rotation, safe;
+            let attempts = 0;
+            do {
+                x = Math.random() * (window.innerWidth - photo.offsetWidth);
+                y = Math.random() * (window.innerHeight - photo.offsetHeight);
+                safe = true;
+                if (x + photo.offsetWidth > containerRect.left &&
+                    x < containerRect.right &&
+                    y + photo.offsetHeight > containerRect.top &&
+                    y < containerRect.bottom) { safe = false; }
+                for (let pos of positions) {
+                    if (x < pos.x + pos.w && x + photo.offsetWidth > pos.x &&
+                        y < pos.y + pos.h && y + photo.offsetHeight > pos.y) { safe = false; break; }
+                }
+                attempts++; if (attempts > 200) safe = true;
+            } while (!safe);
+            positions.push({x, y, w: photo.offsetWidth, h: photo.offsetHeight});
+            rotation = Math.random() * 30 - 15;
+            photo.style.left = x + "px";
+            photo.style.top = y + "px";
+            photo.style.transform = `rotate(${rotation}deg)`;
+        });
+    }
+    window.addEventListener('load', placePhotos);
+    window.addEventListener('resize', placePhotos);
+
+    /* ===== No Button Logic ===== */
+   const noBtn = document.getElementById("noBtn");
+const container = document.querySelector(".container");
+
+// Initial text
+noBtn.textContent = "No 😏";
+
+function moveNoButton() {
+    const maxX = container.clientWidth - noBtn.offsetWidth;
+    const maxY = container.clientHeight - noBtn.offsetHeight;
+
+    // Move button inside the container
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+    noBtn.style.bottom = "auto";
+
+    // Change text on first hover / touch
+    noBtn.textContent = "Try clicking me… good luck! 😂";
+}
+
+// Event listeners
+noBtn.addEventListener("mouseenter", moveNoButton);
+noBtn.addEventListener("touchstart", moveNoButton);
+
+    /* ===== Yes Click ===== */
+    const popupOverlay = document.getElementById("popupOverlay");
+    const popupImage = document.getElementById("popupImage");
+    const music = document.getElementById("music");
+    let playing = false;
+    function toggleMusic() { playing ? music.pause() : music.play(); playing=!playing; }
+
+    function yesClicked() {
+        // confetti hearts
+        for (let i=0;i<30;i++){ createHeartConfetti(document.getElementById('yesBtn')); }
+        // love notes
+        for (let i=0;i<15;i++){ createLoveNote(); }
+           setTimeout(() => {
+        window.location.href = 'letter.html';
+    }, 2500);
+    }
+
+    /* ===== Heart Confetti Functions ===== */
+    function createHeartConfetti(element) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.style.left = (element.offsetLeft + element.offsetWidth/2 + (Math.random()*100-50)) + 'px';
+        heart.style.top = (element.offsetTop + element.offsetHeight/2) + 'px';
+        heart.style.width = heart.style.height = 15+Math.random()*15+'px';
+        heart.style.animationDuration = 2+Math.random()*2+'s';
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(), 4000);
+    }
+
+    /* ===== Floating Love Notes ===== */
+    function createLoveNote() {
+        const note = document.createElement('div');
+        note.className='love-note';
+        note.textContent='I ❤️ You';
+        note.style.left = Math.random()*(window.innerWidth-50)+'px';
+        note.style.top = Math.random()*(window.innerHeight-50)+'px';
+        document.body.appendChild(note);
+        setTimeout(()=>note.remove(), 3000);
+    }
+
+    /* ===== Photo Popup ===== */
+    photos.forEach(photo => {
+        photo.addEventListener('click', ()=> {
+            popupImage.src = photo.src;
+            popupOverlay.classList.add('show');
+        });
+    });
+    popupOverlay.addEventListener('click', ()=> {
+        popupOverlay.classList.remove('show');
+        popupImage.src='';
+    });
+
+    // Continuous floating hearts
+function createFloatingHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    heart.textContent = '❤️';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.fontSize = 12 + Math.random() * 20 + 'px';
+    heart.style.animationDuration = 4 + Math.random() * 4 + 's';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), parseFloat(heart.style.animationDuration) * 1000);
+}
+
+// Generate hearts continuously every 300ms
+setInterval(createFloatingHeart, 300);
+
+</script>
+
+</body>
+</html>

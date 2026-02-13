@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Valentine Letter 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<style>
+    /* Background and body */
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #fbeec1, #faded8, #f9e6d0);
+        background-size: 400% 400%;
+        animation: bgShift 20s ease infinite;
+        font-family: 'Roboto', sans-serif;
+        overflow: hidden;
+    }
+
+    @keyframes bgShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Letter container */
+    .letter {
+        width: 90%;
+        max-width: 700px;
+        min-height: 80vh;
+        background: url('https://i.imgur.com/LpK7gJ0.png') no-repeat center/cover; /* parchment texture */
+        padding: 50px 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    /* Optional subtle animation of parchment */
+    .letter::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.05);
+        pointer-events: none;
+        animation: parchmentGlow 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes parchmentGlow {
+        0% { opacity: 0.03; }
+        100% { opacity: 0.08; }
+    }
+
+    /* Romantic text styling */
+    .letter h1 {
+        font-family: 'Great Vibes', cursive;
+        font-size: 52px;
+        color: #a83f2d;
+        text-align: center;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .letter p {
+        font-size: 18px;
+        line-height: 1.8;
+        color: #5a3b2c;
+        text-align: justify;
+        text-indent: 40px;
+        margin-bottom: 18px;
+    }
+
+    /* Signature */
+    .signature {
+        font-family: 'Great Vibes', cursive;
+        font-size: 36px;
+        color: #a83f2d;
+        margin-top: 40px;
+        text-align: right;
+    }
+
+    /* Decorative hearts */
+    .letter .heart {
+        position: absolute;
+        font-size: 28px;
+        opacity: 0.3;
+        animation: heartFloat linear infinite;
+    }
+
+    @keyframes heartFloat {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+        50% { opacity: 0.5; }
+        100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    }
+
+    @media(max-width:600px){
+        .letter { padding: 30px 20px; }
+        .letter h1 { font-size: 38px; }
+        .letter p { font-size: 16px; text-indent: 20px; }
+        .signature { font-size: 28px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="letter" id="letter">
+    <h1>My Beloved ❤️</h1>
+    <p>From the very moment our paths crossed, my heart knew it had found its companion. Every laugh, every glance, and every shared secret has woven itself into the very fabric of my being.</p>
+    <p>I find myself thinking of you in every quiet moment, longing to hold your hand and whisper all the dreams my heart carries. You are the poetry I never knew I could write, the song I always wanted to sing, and the warmth that lights my soul.</p>
+    <p>On this special day, I simply want you to know how cherished and adored you are. Will you continue this journey of love with me, forever entwined in heart and spirit?</p>
+    <div class="signature">❤️ Yours Always</div>
+</div>
+
+<script>
+    /* Floating decorative hearts */
+   // Controlled floating hearts on left and right of the letter
+function createLetterSideHeart(side) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.textContent = '❤️';
+    const letter = document.getElementById('letter');
+    const rect = letter.getBoundingClientRect();
+
+    // Random vertical position along the letter height
+    const topPos = rect.top + Math.random() * rect.height;
+    heart.style.top = topPos + 'px';
+
+    // Place heart on left or right side
+    if(side === 'left'){
+        heart.style.left = (rect.left - 30) + 'px';
+    } else {
+        heart.style.left = (rect.right + 10) + 'px';
+    }
+
+    // Random size and animation duration
+   
+
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(), parseFloat(heart.style.animationDuration)*1000);
+}
+
+// Create exactly 5 hearts on each side
+for(let i=0; i<5; i++){
+    setTimeout(()=>createLetterSideHeart('left'), i*300);
+    setTimeout(()=>createLetterSideHeart('right'), i*300);
+}
+
+</script>
+
+</body>
+</html>
